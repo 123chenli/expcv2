@@ -18,7 +18,7 @@ class Cameo(object):
 
     def onKeypress(self, keycode):
         if keycode == 32:
-            self._captureManager.writeImage('screenshot.png')
+            self._captureManager.writeImage('images/screenshot.png')
         elif keycode == 9:
             if not self._captureManager.isWritingVideo:
                 self._captureManager.startWritingVideo('screencast.avi')
