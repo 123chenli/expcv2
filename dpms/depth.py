@@ -39,8 +39,7 @@ def drawlines(img1, img2, lines, pts1, pts2):
 
 img1= to_uint8(cv2.pyrDown(cv2.imread('../images/stacked1.png')))
 img2 = to_uint8(cv2.pyrDown(cv2.imread('../images/stacked2.png')))
-sift = cv2.SIFT()
-
+sift = cv2.xfeatures2d.create_sift()
 
 kp1, des1 = sift.detectAndCompute(img1, None)
 kp2, des2 = sift.detectAndCompute(img2, None)
