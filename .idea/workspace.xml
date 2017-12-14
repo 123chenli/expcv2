@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d35b6a78-c10f-41a3-9979-5260521520c0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/gitignore" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <ignored path="expcv2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -133,6 +133,7 @@
         <option value="$PROJECT_DIR$/dpms/ceju/aa.py" />
         <option value="$PROJECT_DIR$/dpms/ceju/depth.py" />
         <option value="$PROJECT_DIR$/dpms/ceju/depths.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
