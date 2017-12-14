@@ -5,6 +5,9 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="cv2.*" />
+          <option value="dpms.ceju.depth.*" />
+          <option value="dpms.ceju.depth.ceju" />
+          <option value="cameraconfigs" />
         </list>
       </option>
     </inspection_tool>
