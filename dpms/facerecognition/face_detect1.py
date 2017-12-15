@@ -21,5 +21,4 @@ def detect(filename):
     cv2.imwrite('./vikings.jpg', img)
     cv2.waitKey(0)
 
-
 detect(filename)
