@@ -68,10 +68,12 @@ def main():
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
     # 根据一直距离的图片计算焦距
     marker = find_marker(res)
-    print('焦距：', marker)
+    print('标记：', marker)
+    print('------------------------------------------------------------------------------------------')
     # 计算出焦距
     focalLength = (marker[1][0] * KNOWN_DISTANCE) / KNOWN_WIDTH
-    print('focalLength: %f px' % focalLength )
+    print('焦距: %f px' % focalLength)
+    print('------------------------------------------------------------------------------------------')
 
     for im in ImgToDetArray:
         imgToDet = cv2.imread(im)
