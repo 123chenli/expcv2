@@ -57,12 +57,11 @@ cv2.destroyAllWindows()
 
 # 标定
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, size, None, None)
-print(ret)
 print('ret', ret)
-print('mtx:\n', mtx)  # 内参数矩阵
-print('dist:\n', dist)  # 畸变系数 （k1, k2, k3, p1, p2)
-print('rvecs:\n', rvecs)  # 旋转向量, 外参数
-print('tvecs:\n', tvecs)  # 平移向量, 外参数
+print('内参数矩阵:\n', mtx)  # 内参数矩阵
+print('畸变矩阵:\n', dist)  # 畸变系数 （k1, k2, k3, p1, p2)
+print('旋转向量:\n', rvecs)  # 旋转向量, 外参数
+print('平移向量:\n', tvecs)  # 平移向量, 外参数
 
 print('----------------------------------------------')
 
