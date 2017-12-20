@@ -2,6 +2,24 @@ import cv2
 import numpy as np
 import glob
 
+# cap0 = cv2.VideoCapture(0)
+# # cap1 = cv2.VideoCapture(1)
+#
+# while(1):
+#     ret0, frame0 = cap0.read()
+#     # ret1, frame1 = cap1.read()
+#
+#     img = cv2.imshow('capture0', frame0)
+#     # cv2.imshow('capture1', frame1)
+#
+#     if cv2.waitKey() & 0xff == ord('q'):
+#         cv2.imwrite('./calibrateImages/calibrate.jpg', img)
+#         break
+#
+# cap0.release()
+# # cap1.release()
+# cv2.destroyAllWindows()
+
 
 # 设置寻找亚像素角点的参数，采用的停止准则是最大循环次数30和最大误差容限0.001
 criteria = (cv2.TERM_CRITERIA_MAX_ITER | cv2.TERM_CRITERIA_EPS, 30, 0.001)
