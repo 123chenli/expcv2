@@ -5,6 +5,8 @@
       <option name="ignoredIdentifiers">
         <list>
           <option value="cv2.*" />
+          <option value="TensorFlow.python_io" />
+          <option value="TensorFlow.*" />
         </list>
       </option>
     </inspection_tool>
