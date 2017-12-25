@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 # 网络结构定义：
 # 输入参数： images, image batch 、4D tensor、tf.float32、[batch_size, width, height, channels]
 # 返回参数： logits, float, [batch_size, n_classes]
@@ -83,6 +84,60 @@ def inference(images, batch_size, n_classes):
                              name='biases',
                              dtype=tf.float32)
         local4 = tf.nn.relu(tf.matmul(locla3, weights) + biases, name='local4')
+
+    # softmax回归层
+    # 将前面的fc层输出，做一个线性回归，计算出每一类的得分，在这里是两类，所以这个层输出的是两个得分
+    with tf.variable_scope('soft_linera') as scope:
+        weights = tf.Variable(tf.truncated_normal(shape=[128,n_classes],
+                                                  stddev=0.005,
+                                                  dtype=tf.float32),
+                              name='soft_linear',
+                              dtypt=tf.float32)
+        biases = tf.Variable(tf.constant(value=0.1,
+                                         dtypt=tf.float32,
+                                         shape=[n_classes]),
+                             name='biases',
+                             dtype=tf.float32)
+        softmax_linear = tf.add(tf.matmul(local4,weights),biases,name='soft_linear')
+    return softmax_linear
+
+
+# loss计算
+# 传入参数，logits,网络计算输出值，labels，真实值，在这里是0或1
+# 返回参数，loss,损失值
+def losses(logits, labels):
+    with tf.variable_scope('loss') as scope:
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(
+            logits=logits,
+            labels=labels,
+            name='xentropy_per_example'
+        )
+        loss = tf.reduce_mean(cross_entropy, name='loss')
+        tf.summary.scalar(scope.name +'/loss', loss)
+    return loss
+
+
+# loss随时值优化
+# 输入参数：loss,learning_rate,学习速率
+# 返回参数：train_top,训练op,这个参数要输入sess,run中让模型去训练
+def trainning(loss, learning_rate):
+    with tf.name_scope('optimizer'):
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+        global_step = tf.Variable(0, name='global_step', trainable=False)
+        train_op = optimizer.minimize(loss,global_step=global_step)
+    return train_op
+
+
+# 评价标准计算
+# 输入参数： logits,网络计算值，labels，标签，也就是真实值，在这里是0或1
+# 返回参数： accuracy,当前step的平均准确率，也就是在这些batch中多少张推按被正确分类了
+def evaluation(logits, labels):
+    with tf.variable_scope('accuracy') as scope:
+        correct = tf.nn.in_top_k(logits, labels, 1)
+        correct = tf.cast(correct, tf.float16)
+        accuracy = tf.reduce_mean(correct)
+        tf.summary.scalar(scope.name + '/accuracy', accuracy)
+    return accuracy
 
 
 
