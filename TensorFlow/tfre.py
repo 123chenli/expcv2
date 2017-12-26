@@ -64,7 +64,6 @@ def read_and_decode(filename):
 
 if __name__ == '__main__':
     batch = read_and_decode('train.tfrecords')
-    print(batch)
     init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
     with tf.Session() as sess:  # 开始一个会话
         sess.run(init_op)

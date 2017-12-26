@@ -39,7 +39,7 @@ def get_files(file_dir, ratio):
     # 利用shuffle打乱顺序
     temp = np.array([image_list, label_list])
     temp = temp.transpose()
-    np.random.shffle(temp)
+    np.random.shuffle(temp)
 
     # 将所有的img和lab转换成list
     all_image_list = list(temp[:, 0])
@@ -53,10 +53,12 @@ def get_files(file_dir, ratio):
 
     tra_images = all_image_list[0: n_train]
     tra_labels = all_label_list[0: n_train]
-    tra_labels = [int(float(i)) for i in tra_labels]
+    # for i in tra_labels:
+    #     print(i)
+    tra_labels = [str(i) for i in tra_labels]
     val_images = all_image_list[n_train: -1]
     val_labels = all_label_list[n_train: -1]
-    val_labels = [int(float(i)) for i in val_labels]
+    val_labels = [str(i) for i in val_labels]
 
     return tra_images, tra_labels, val_images, val_labels
 

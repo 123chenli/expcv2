@@ -20,7 +20,7 @@ def inference(images, batch_size, n_classes):
                              name='biases',
                              dtype=tf.float32)
         conv = tf.nn.conv2d(images, weights, strides=[1, 1, 1, 1], padding='SAME')
-        pre_activation = tf.nn.bias.add(conv, biases)
+        pre_activation = tf.nn.bias_add(conv, biases)
         conv1 = tf.nn.relu(pre_activation, name=scope.name)
 
     # 池化层1
@@ -28,27 +28,27 @@ def inference(images, batch_size, n_classes):
     with tf.variable_scope('pooling1_lrn') as scope:
         pool1 = tf.nn.max_pool(conv1, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1],
                                  padding='SAME', name='pooling1')
-        norm1 = tf.nn.lrn(pool1, depth_radiu=4, bias=1.0, alpha=0.001/9.0, beta=0.75, name='norm1')
+        norm1 = tf.nn.lrn(pool1, depth_radius=4, bias=1.0, alpha=0.001/9.0, beta=0.75, name='norm1')
 
     # 卷积层2
-    # 16个3*3的卷积核（16通道）,padding='SAME'，表示padding后卷积的图与原图尺寸一致，激活函数relu()
     with tf.variable_scope('conv2') as scope:
-        reshape = tf.reshape(pool2, shape=[batch_size, -1])
-        dim = reshape.get_shape()[1].value
-        weights = tf.Variable(tf.truncated_normal(shape=[dim, 128],
-                                                    stddev=0.005,
-                                                    dtype=tf.float32),
-                                  name='weights',
-                                  dtype=tf.float32)
+        weights = tf.Variable(tf.truncated_normal(shape=[3, 3, 64, 16],
+                                                  stddev=0.1,
+                                                  dtype=tf.float32),
+                              name='weights',
+                              dtype=tf.float32)
         biases = tf.Variable(tf.constant(value=0.1,
-                                             dtype=tf.float32,
-                                             shape=[128]),
-                                 name='biases',
-                                 dtype=tf.floats32)
-        local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
+                                         dtype=tf.float32,
+                                         shape=[16]),
+                             name='biases',
+                             dtype=tf.float32)
+        conv = tf.nn.conv2d(norm1, weights, strides=[1, 1, 1, 1], padding='SAME')
+        pre_activation = tf.nn.bias_add(conv, biases)
+        conv2 = tf.nn.relu(pre_activation, name='conv2')
+
 
     # 池化层2
-    # 3*3最大赤化，步长strides为2，池化后执行lrn()操作
+    # 3*3最大池化，步长strides为2，池化后执行lrn()操作
     with tf.variable_scope('pooling2_lrn') as scope:
         norm2 = tf.nn.lrn(conv2, depth_radius=4, bias=1.0, alpha=0.001/9.0, beta=0.75, name='norm2')
         pool2 = tf.nn.max_pool(norm2, ksize=[1, 3, 3, 1], strides=[1, 1, 1, 1],
@@ -70,6 +70,20 @@ def inference(images, batch_size, n_classes):
                              dtype=tf.float32)
         local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
 
+    # 全连层3
+    with tf.variable_scope('local3') as scope:
+        reshape = tf.reshape(pool2, shape=[batch_size, -1])
+        dim = reshape.get_shape()[1].value
+        weights = tf.Variable(tf.truncated_normal(shape=[dim, 128],
+                                                  stddev=0.005,
+                                                  dtype=tf.float32),
+                              name='weights',
+                              dtype=tf.float32)
+        biases = tf.Variable(tf.constant(value=0.1, dtype=tf.float32, shape=[128]),
+                             name='biases',
+                             dtype=tf.float32)
+        local3 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name=scope.name)
+
     # 全连层4
     # 128个神经网络，激活函数relu()
     with tf.variable_scope('local4') as scope:
@@ -77,13 +91,13 @@ def inference(images, batch_size, n_classes):
                                                   stddev=0.005,
                                                   dtype=tf.float32),
                               name='weights',
-                              dtype=tf.flaot32)
+                              dtype=tf.float32)
         biases = tf.Variable(tf.constant(value=0.1,
                                          dtype=tf.float32,
                                          shape=[128]),
                              name='biases',
                              dtype=tf.float32)
-        local4 = tf.nn.relu(tf.matmul(locla3, weights) + biases, name='local4')
+        local4 = tf.nn.relu(tf.matmul(local3, weights) + biases, name='local4')
 
     # softmax回归层
     # 将前面的fc层输出，做一个线性回归，计算出每一类的得分，在这里是两类，所以这个层输出的是两个得分
@@ -92,9 +106,9 @@ def inference(images, batch_size, n_classes):
                                                   stddev=0.005,
                                                   dtype=tf.float32),
                               name='soft_linear',
-                              dtypt=tf.float32)
+                              dtype=tf.float32)
         biases = tf.Variable(tf.constant(value=0.1,
-                                         dtypt=tf.float32,
+                                         dtype=tf.float32,
                                          shape=[n_classes]),
                              name='biases',
                              dtype=tf.float32)

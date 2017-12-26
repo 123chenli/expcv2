@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
+import TensorFlow.model as model
 import tensorflow as tf
 from TensorFlow.input_data import get_files
 
@@ -29,10 +30,10 @@ def evaluate_one_image(image_array):
         image = tf.cast(image_array, tf.float32)
         image = tf.image.per_image_standardization(image)
         image = tf.reshape(image, [1, 64, 64, 3])
-        logit = model.infernce(image, BATCH_SIZE, N_CLASSES)
+        logit = model.inference(image, BATCH_SIZE, N_CLASSES)
         logit = tf.nn.softmax(logit)
         x = tf.placeholder(tf.float32, shape=[64, 64, 3])
-        logs_train_dir = './picture/gent_Image'
+        logs_train_dir = './gent_Images'
         saver = tf.train.Saver()
 
         with tf.Session() as sess:
@@ -58,7 +59,7 @@ def evaluate_one_image(image_array):
 
 
 if __name__ == '__main__':
-    train_dir = './picture/gent_Image'
+    train_dir = './gent_Images'
     train, train_label, val, val_label = get_files(train_dir, 0.3)
     img = get_one_image(val)  # 通过改变参数train or val， 进而验证训练集或测试集
     evaluate_one_image(img)
